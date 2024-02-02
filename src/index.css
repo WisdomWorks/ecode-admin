@@ -12,3 +12,11 @@ html {
   font-family: 'Lato', sans-serif;
   font-size: 16px;
 }
+
+.MuiButton-contained {
+  text-transform: none !important;
+}
+
+.MuiTab-root {
+  text-transform: none !important;
+}

@@ -1,6 +1,6 @@
-import { SiderBar } from '@/components/SiderBar'
+import { SideBar } from '@/components/layout/SideBar'
 
-import { Link, Outlet, RootRoute } from '@tanstack/react-router'
+import { Outlet, RootRoute } from '@tanstack/react-router'
 
 export const Route = new RootRoute({
   component: RootComponent,
@@ -8,12 +8,16 @@ export const Route = new RootRoute({
 
 function RootComponent() {
   return (
-    <div>
-      <SiderBar />
-      <div>
-        <Link to="/user-management">User Management</Link>
+    <>
+      <SideBar />
+      <div className="ml-[18rem] h-screen">
+        <div className="flex h-16 w-full items-center justify-center shadow-l">
+          <span className="text-2xl font-bold text-neutral-900">Code-E</span>
+        </div>
+        <div className="h-full p-8">
+          <Outlet />
+        </div>
       </div>
-      <Outlet />
-    </div>
+    </>
   )
 }
