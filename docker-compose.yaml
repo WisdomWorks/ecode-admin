@@ -1,0 +1,6 @@
+services:
+  app:
+    image: wisdomwork/ecode-admin:latest
+    ports:
+      - '4001:80'
+    restart: unless-stopped
