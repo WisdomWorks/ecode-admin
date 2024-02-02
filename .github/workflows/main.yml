@@ -23,5 +23,4 @@ jobs:
         with:
           context: .
           push: true
-          target: prod
           tags: ${{ github.event.repository.name }}:latest
