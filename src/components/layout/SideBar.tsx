@@ -1,11 +1,7 @@
 import Logo from '@/assets/logo.png'
+import { menus } from '@/constants'
 
-import {
-  KeyboardArrowUp,
-  LocalLibrary,
-  Logout,
-  Person,
-} from '@mui/icons-material'
+import { KeyboardArrowUp, Logout } from '@mui/icons-material'
 import { Avatar, Button, Drawer, MenuItem } from '@mui/material'
 import { Link } from '@tanstack/react-router'
 import {
@@ -34,35 +30,27 @@ export const SideBar = () => {
           </Link>
 
           <div className="flex flex-col gap-4 text-base text-white">
-            <Link
-              activeProps={{
-                className:
-                  'font-bold text-primary-500 bg-transparent [&_div]:bg-primary-500',
-              }}
-              className="flex cursor-pointer items-center justify-start gap-2 whitespace-nowrap transition-all"
-              to="/user-management"
-            >
-              <div className="size-1 h-8 rounded-sm transition-all"></div>
-              <Person className="size-6 fill-current" />
-              <span className="pointer-events-none text-xl italic">
-                User Management
-              </span>
-            </Link>
+            {menus.map(menu => {
+              const { Icon, label, to } = menu
 
-            <Link
-              activeProps={{
-                className:
-                  'font-bold text-primary-500 bg-transparent [&_div]:bg-primary-500',
-              }}
-              className="flex cursor-pointer items-center justify-start gap-2 whitespace-nowrap transition-all"
-              to="/"
-            >
-              <div className="size-1 h-8 rounded-sm transition-all"></div>
-              <LocalLibrary className="size-6" />
-              <span className="pointer-events-none text-xl italic">
-                Course Management
-              </span>
-            </Link>
+              return (
+                <Link
+                  activeProps={{
+                    className:
+                      'font-bold text-primary-500 bg-transparent [&_div]:bg-primary-500',
+                  }}
+                  className="flex cursor-pointer items-center justify-start gap-2 whitespace-nowrap transition-all"
+                  key={label}
+                  to={to as string}
+                >
+                  <div className="size-1 h-8 rounded-sm transition-all"></div>
+                  <Icon className="size-6 fill-current" />
+                  <span className="pointer-events-none text-xl italic">
+                    {label}
+                  </span>
+                </Link>
+              )
+            })}
           </div>
         </div>
 

@@ -3,7 +3,8 @@ import { SyntheticEvent, useState } from 'react'
 import { TabPanel } from '@/components/common/TabPanel'
 import { a11yProps } from '@/utils'
 
-import { UserTab } from './@user-tab/UserTab'
+import { UserCreationTab } from './@create-user/UserCreationTab'
+import { UserTab } from './@users-tab/UserTab'
 import { Tab, Tabs } from '@mui/material'
 import { FileRoute, lazyRouteComponent } from '@tanstack/react-router'
 
@@ -31,7 +32,7 @@ const UserManagement = () => {
         <UserTab />
       </TabPanel>
       <TabPanel index={1} value={tab}>
-        UserCreationTab
+        <UserCreationTab />
       </TabPanel>
     </div>
   )

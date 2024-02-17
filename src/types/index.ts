@@ -1,2 +1,2 @@
-export * from './common.type'
-export * from './constants'
+export * from './common.types'
+export * from './form.types'

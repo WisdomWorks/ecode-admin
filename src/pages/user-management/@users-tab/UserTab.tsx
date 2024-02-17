@@ -1,10 +1,10 @@
 import { useState } from 'react'
 
 import { Root, useGetUsers } from '@/api/useGetUsers'
-import { SearchInput } from '@/components/common/SearchInput'
-import { Table } from '@/components/common/Table'
-import { OptionSelector } from '@/components/selector/OptionSelector'
-import { Role, RoleOptions, TColumn } from '@/types'
+import { SearchInput, Table } from '@/components/common'
+import { OptionSelector } from '@/components/selector'
+import { Role, RoleOptions } from '@/constants'
+import { TColumn } from '@/types'
 
 const columns: TColumn<Root>[] = [
   {
@@ -71,6 +71,7 @@ export const UserTab = () => {
         />
         <OptionSelector
           className="col-span-3"
+          label="Role"
           onChange={(_, value) =>
             setFilter(prev => ({ ...prev, role: value as Role }))
           }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { CSSProperties } from 'react'
 
 import classNames from 'classnames'
@@ -20,9 +21,7 @@ export const cn = (...input: classNames.ArgumentArray) => {
   return twMerge(classNames(input))
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const generateCustomComponentPlugin = (
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   theme: TTheme,
 ): CSSRuleObject[] => {
   return []
