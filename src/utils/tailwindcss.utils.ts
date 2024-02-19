@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { CSSProperties } from 'react'
 
 import classNames from 'classnames'
@@ -65,7 +64,7 @@ export const generateCustomComponentPlugin = (
 
         '&:hover': {
           color: `${theme('colors.neutral.500')}`,
-          background: '${theme(colors.neutral-250)}',
+          background: `${theme('colors.neutral.250')}`,
         },
 
         '&:active': {
@@ -79,9 +78,7 @@ export const generateCustomComponentPlugin = (
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        addingRight: '16px',
         padding: '12px 18px',
-        paddingLeft: '16px',
         fontSize: '14px',
         fontWeight: 400,
         lineHeight: '22px',
