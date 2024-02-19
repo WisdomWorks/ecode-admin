@@ -30,11 +30,12 @@ export const FormInput = <TForm extends FieldValues>({
         {!!required && <span className="text-danger-500">*</span>}
       </span>
       <TextField
+        className="[&_.MuiInputBase-root]:rounded-xl"
         error={!!error}
         fullWidth
         helperText={error?.message}
         inputProps={{
-          className: 'text-sm disabled:bg-neutral-200 ',
+          className: 'text-sm disabled:bg-neutral-200',
         }}
         name={name}
         onBlur={onBlur}

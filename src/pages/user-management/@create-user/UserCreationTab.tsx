@@ -9,6 +9,7 @@ import {
   TUserCreationForm,
   UserCreationOption,
 } from '../@types'
+import { CreateFromExcel } from './CreateFromExcel'
 import { CreateManuallyForm } from './CreateManuallyForm'
 import { zodResolver } from '@hookform/resolvers/zod'
 
@@ -44,25 +45,30 @@ export const UserCreationTab = () => {
       />
 
       {watch('creationOption') === UserCreationOption.Manually && (
-        <CreateManuallyForm control={control} />
+        <>
+          <CreateManuallyForm control={control} />
+          <FormButtonGroup
+            buttons={[
+              {
+                type: 'submit',
+                label: 'Clear',
+                onClick: () => reset(),
+                className: 'clearBtn',
+              },
+              {
+                type: 'submit',
+                label: 'Create',
+                className: 'submitBtn',
+              },
+            ]}
+            className="col-span-12 justify-end"
+          />
+        </>
       )}
 
-      <FormButtonGroup
-        buttons={[
-          {
-            type: 'submit',
-            label: 'Clear',
-            preset: 'clear',
-            onClick: () => reset(),
-          },
-          {
-            type: 'submit',
-            label: 'Create',
-            preset: 'submit',
-          },
-        ]}
-        className="col-span-12 justify-end"
-      />
+      {watch('creationOption') === UserCreationOption.Import && (
+        <CreateFromExcel />
+      )}
     </Form>
   )
 }

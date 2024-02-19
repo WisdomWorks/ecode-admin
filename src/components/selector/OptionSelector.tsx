@@ -63,6 +63,7 @@ export const OptionSelector = <T,>({
               ...params.InputProps,
               className: 'text-sm disabled:bg-neutral-200 ',
             }}
+            className="[&_.MuiInputBase-root]:rounded-xl"
             error={error}
             helperText={helperText}
             placeholder={placeholder}

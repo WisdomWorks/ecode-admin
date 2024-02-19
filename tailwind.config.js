@@ -190,6 +190,10 @@ export default {
           900: '#230e3d',
           DEFAULT: '#9D6ADD',
         },
+        neutral: {
+          250: '#EAECF0FF',
+          550: '#565D6DFF',
+        },
       },
       fontSize: {
         t1: ['0.6875rem', '1.125rem'],

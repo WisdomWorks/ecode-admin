@@ -60,7 +60,7 @@ export const UserTab = () => {
   const { role, search } = filter
 
   return (
-    <div>
+    <>
       <div className="grid grid-cols-12 gap-4">
         <SearchInput
           className="col-span-4"
@@ -83,6 +83,6 @@ export const UserTab = () => {
       <div>
         <Table columns={columns} data={data || []} />
       </div>
-    </div>
+    </>
   )
 }
