@@ -29,7 +29,7 @@ export const UserCreationTab = () => {
   const { control, reset, watch } = form
 
   const handleSubmitForm: SubmitHandler<TUserCreationForm> = data =>
-    console.log(data)
+    console.log(data, 'data')
 
   return (
     <Form
