@@ -24,6 +24,9 @@ jobs:
           cache: 'pnpm'
       - name: Install dependencies
         run: pnpm install
+        env:
+          CI: true
+          CACHE: none
 
       - name: Run linting and tsc
         run: pnpm lint && pnpm tsc
