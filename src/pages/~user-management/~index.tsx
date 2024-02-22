@@ -3,8 +3,8 @@ import { SyntheticEvent, useState } from 'react'
 import { TabPanel } from '@/components/common/TabPanel'
 import { a11yProps } from '@/utils'
 
-import { UserCreationTab } from './@create-user/UserCreationTab'
-import { UserTab } from './@users-tab/UserTab'
+import { UserCreationTab } from './create-user/UserCreationTab'
+import { UserTab } from './users-tab/UserTab'
 import { Tab, Tabs } from '@mui/material'
 import { createFileRoute, lazyRouteComponent } from '@tanstack/react-router'
 
@@ -41,5 +41,5 @@ const UserManagement = () => {
 export default UserManagement
 
 export const Route = createFileRoute('/user-management/')({
-  component: lazyRouteComponent(() => import('./index')),
+  component: lazyRouteComponent(() => import('./~index')),
 })

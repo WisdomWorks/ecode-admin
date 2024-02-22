@@ -3,12 +3,12 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 import { Form, FormCardRadio } from '@/components/form'
 import { FormButtonGroup } from '@/components/form/FormButtonGroup'
 
-import { CreateUserSchema } from '../@schemas'
+import { CreateUserSchema } from '../schemas'
 import {
   createUserOptions,
   TUserCreationForm,
   UserCreationOption,
-} from '../@types'
+} from '../types'
 import { CreateFromExcel } from './CreateFromExcel'
 import { CreateManuallyForm } from './CreateManuallyForm'
 import { zodResolver } from '@hookform/resolvers/zod'

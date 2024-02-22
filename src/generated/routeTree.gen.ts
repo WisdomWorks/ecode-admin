@@ -10,9 +10,9 @@
 
 // Import Routes
 
-import { Route as rootRoute } from './../pages/__root'
-import { Route as IndexImport } from './../pages/index'
-import { Route as UserManagementIndexImport } from './../pages/user-management/index'
+import { Route as rootRoute } from './../pages/~__root'
+import { Route as IndexImport } from './../pages/~index'
+import { Route as UserManagementIndexImport } from './../pages/~user-management/~index'
 
 // Create/Update Routes
 

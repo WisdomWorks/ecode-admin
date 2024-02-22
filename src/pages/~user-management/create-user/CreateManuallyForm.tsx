@@ -3,7 +3,7 @@ import { Control } from 'react-hook-form'
 import { FormInput, FormSelector } from '@/components/form'
 import { RoleOptions } from '@/constants'
 
-import { TUserCreationForm } from '../@types'
+import { TUserCreationForm } from '../types'
 
 interface Props {
   control: Control<TUserCreationForm>
