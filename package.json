@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "prepare": "husky install",
     "completed": "echo '\\033[4;32m♡ 'Completed checking ♡' \\033[0m'",
-    "generate-router": "tsr generate"
+    "generate-router": "tsr generate",
+    "generate-schema": "pnpm dlx  openapi-typescript http://localhost:8080/v3/api-docs --output ./src/generated/schema.d.ts"
   },
   "dependencies": {
     "@emotion/react": "^11.11.3",

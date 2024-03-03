@@ -1,32 +1,14 @@
+import { Schema } from '@/types'
+
+import { callAPI } from './axios'
 import { useQuery } from '@tanstack/react-query'
-import axios from 'axios'
 
-export interface Root {
-  address: Address
-  email: string
-  id: number
-  name: string
-  username: string
-}
+// type TParams =
+//   operations['getAllUsers']['parameters']['query']['getUsersRequest']
 
-export interface Address {
-  city: string
-  geo: Geo
-  street: string
-  suite: string
-  zipcode: string
-}
+const fetchUsers = async (): Promise<Schema['User']> => {
+  const response = await callAPI('/users', 'get')
 
-export interface Geo {
-  lat: string
-  lng: string
-}
-
-const fetchUsers = async (): Promise<Root[]> => {
-  const response = await axios({
-    method: 'GET',
-    url: 'https://jsonplaceholder.typicode.com/users',
-  })
   return response.data
 }
 

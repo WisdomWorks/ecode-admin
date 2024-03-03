@@ -1,14 +1,17 @@
 import { useState } from 'react'
 
-import { Root, useGetUsers } from '@/api/useGetUsers'
+// import { useGetUsers } from '@/api/useGetUsers'
 import { SearchInput, Table } from '@/components/common'
 import { OptionSelector } from '@/components/selector'
 import { Role, RoleOptions } from '@/constants'
-import { TColumn } from '@/types'
+import { Schema, TColumn } from '@/types'
 
-const columns: TColumn<Root>[] = [
+import { Delete, Edit } from '@mui/icons-material'
+import { IconButton } from '@mui/material'
+
+const columns: TColumn<Schema['User']>[] = [
   {
-    accessorKey: 'id',
+    accessorKey: 'userId',
     header: 'ID',
   },
   {
@@ -24,33 +27,13 @@ const columns: TColumn<Root>[] = [
     header: 'Username',
   },
   {
-    accessorKey: 'address.city',
-    header: 'City',
-  },
-  {
-    accessorKey: 'address.street',
-    header: 'Street',
-  },
-  {
-    accessorKey: 'address.suite',
-    header: 'Suite',
-  },
-  {
-    accessorKey: 'address.zipcode',
-    header: 'Zipcode',
-  },
-  {
-    accessorKey: 'address.geo.lat',
-    header: 'Lat',
-  },
-  {
-    accessorKey: 'address.geo.lng',
-    header: 'Lng',
+    accessorKey: 'role',
+    header: 'Role',
   },
 ]
 
 export const UserTab = () => {
-  const { data } = useGetUsers()
+  // const { data } = useGetUsers()
 
   const [filter, setFilter] = useState({
     search: '',
@@ -81,7 +64,21 @@ export const UserTab = () => {
       </div>
 
       <div>
-        <Table columns={columns} data={data || []} />
+        <Table
+          columns={columns}
+          data={[]}
+          positionActionsColumn="last"
+          renderRowActions={() => (
+            <div>
+              <IconButton onClick={() => console.info('Edit')}>
+                <Edit />
+              </IconButton>
+              <IconButton onClick={() => console.info('Delete')}>
+                <Delete />
+              </IconButton>
+            </div>
+          )}
+        />
       </div>
     </>
   )
