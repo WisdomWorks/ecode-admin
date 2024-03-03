@@ -5,3 +5,7 @@ services:
     ports:
       - '4001:80'
     restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - VITE_API_URL=${VITE_API_URL}
