@@ -6,7 +6,7 @@ import { a11yProps } from '@/utils'
 import { UserCreationTab } from './create-user/UserCreationTab'
 import { UserTab } from './users-tab/UserTab'
 import { Tab, Tabs } from '@mui/material'
-import { createFileRoute, lazyRouteComponent } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 
 const UserManagement = () => {
   const [tab, setTab] = useState(0)
@@ -41,5 +41,5 @@ const UserManagement = () => {
 export default UserManagement
 
 export const Route = createFileRoute('/user-management/')({
-  component: lazyRouteComponent(() => import('./~index')),
+  component: UserManagement,
 })
