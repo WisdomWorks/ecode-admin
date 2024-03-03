@@ -3,7 +3,7 @@ services:
     image: wisdomwork/ecode-admin:latest
     platform: linux/amd64
     ports:
-      - '4001:80'
+      - '4001:4001'
     restart: always
     env_file:
       - .env

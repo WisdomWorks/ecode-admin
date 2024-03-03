@@ -8,7 +8,13 @@ import svgr from 'vite-plugin-svgr'
 export default defineConfig({
   plugins: [react(), TanStackRouterVite(), svgr()],
   server: {
+    host: true,
+    strictPort: true,
     port: 4001,
+  },
+  preview: {
+    port: 4001,
+    strictPort: true,
   },
   resolve: {
     alias: {
