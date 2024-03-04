@@ -2,20 +2,11 @@ import { paths } from '@/generated/schema'
 
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 
-type Path = keyof paths
+export type Path = keyof paths
 
-type PathMethod<T extends Path> = keyof paths[T]
+type PathMethod = 'delete' | 'get' | 'patch' | 'post' | 'put'
 
-export type RequestParams<
-  P extends Path,
-  M extends PathMethod<P>,
-> = paths[P][M] extends {
-  parameters: unknown
-}
-  ? paths[P][M]['parameters']
-  : undefined
-
-export const callAPI = <P extends Path, M extends PathMethod<P>>(
+export const callAPI = <P extends Path, M extends PathMethod>(
   url: P,
   method: M,
   config?: AxiosRequestConfig,
@@ -25,6 +16,13 @@ export const callAPI = <P extends Path, M extends PathMethod<P>>(
     method: method as string,
     ...config,
   })
+}
+
+export type Pagination = {
+  pageNumber: number
+  pageSize: number
+  totalPage: number
+  totalRecord: number
 }
 
 export const instance = axios.create({

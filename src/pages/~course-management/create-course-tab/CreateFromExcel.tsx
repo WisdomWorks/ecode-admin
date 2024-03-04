@@ -22,14 +22,12 @@ export const CreateFromExcel = () => {
           multiple user accounts
         </p>
         <div>
-          {/* <a href={require('@/assets/templates/')}> */}
           <Button
             className="submitBtn"
             startIcon={<Download fontSize="large" />}
           >
             Download template
           </Button>
-          {/* </a> */}
         </div>
       </div>
     </div>

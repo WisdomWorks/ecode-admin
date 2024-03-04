@@ -1,16 +1,15 @@
 import { Control } from 'react-hook-form'
 
-import { FormInput, FormSelector } from '@/components/form'
+import { FormInput } from '@/components/form'
 import { FormButtonGroup } from '@/components/form/FormButtonGroup'
-import { RoleOptions } from '@/constants'
 
-import { TUserCreationForm } from '../types'
+import { TCourseCreationForm } from '../types'
 
 interface Props {
-  control: Control<TUserCreationForm>
+  control: Control<TCourseCreationForm>
   isUpdate?: boolean
   onCloseModalEdit?: () => void
-  reset?: () => void
+  reset: () => void
 }
 
 export const CreateManuallyForm = ({
@@ -25,35 +24,30 @@ export const CreateManuallyForm = ({
         <FormInput
           className="col-span-4"
           control={control}
-          label="Full name"
-          name="name"
-          placeholder="Your full name"
+          label="Course name"
+          name="courseName"
+          placeholder="Fill the course name"
           required
         />
       </div>
-      <FormInput
-        className="col-span-4"
-        control={control}
-        label="User name"
-        name="username"
-        placeholder="Your username"
-        required
-      />
-      <FormInput
-        className="col-span-4"
-        control={control}
-        label="Email"
-        name="email"
-        placeholder="Your email"
-        required
-      />
       <div className="col-span-12 grid grid-cols-12 gap-4">
-        <FormSelector
+        <FormInput
           className="col-span-4"
           control={control}
-          label="Role"
-          name="role"
-          options={RoleOptions}
+          label="Description"
+          name="description"
+          placeholder="Fill the description"
+          required
+        />
+      </div>
+      <div className="col-span-12 grid grid-cols-12 gap-4">
+        <FormInput
+          className="col-span-4"
+          control={control}
+          label="Semester"
+          name="semester"
+          placeholder="Fill the semester"
+          required
         />
       </div>
       <FormButtonGroup
@@ -63,7 +57,7 @@ export const CreateManuallyForm = ({
             label: isUpdate ? 'Cancel' : 'Clear',
             onClick: () => {
               if (isUpdate) return onCloseModalEdit?.()
-              reset?.()
+              reset()
             },
             className: 'clearBtn',
           },

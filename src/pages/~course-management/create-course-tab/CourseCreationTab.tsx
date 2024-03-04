@@ -1,42 +1,40 @@
 import { SubmitHandler, useForm } from 'react-hook-form'
 
-import { useCreateUser } from '@/api/useCreateUser'
+import { useCreateCourse } from '@/api'
 import { Form, FormCardRadio } from '@/components/form'
-import { Role } from '@/constants'
 import { useToastMessage } from '@/hooks'
 import { createOptions, CreationOption } from '@/types'
 
-import { CreateUserSchema } from '../schemas'
-import { TUserCreationForm } from '../types'
+import { CreateCourseSchema } from '../schemas'
+import { TCourseCreationForm } from '../types'
 import { CreateFromExcel } from './CreateFromExcel'
 import { CreateManuallyForm } from './CreateManuallyForm'
 import { zodResolver } from '@hookform/resolvers/zod'
 
-export const UserCreationTab = () => {
+export const CourseCreationTab = () => {
   const { setErrorMessage, setSuccessMessage } = useToastMessage()
-  const { mutate } = useCreateUser()
-  const form = useForm<TUserCreationForm>({
+  const { mutate } = useCreateCourse()
+  const form = useForm<TCourseCreationForm>({
     defaultValues: {
       creationOption: CreationOption.Manually,
-      name: '',
-      username: '',
-      email: '',
-      role: Role.STUDENT,
+      courseName: '',
+      description: '',
+      semester: '',
     },
     mode: 'onChange',
-    resolver: zodResolver(CreateUserSchema),
+    resolver: zodResolver(CreateCourseSchema),
   })
 
   const { control, reset, watch } = form
 
-  const handleSubmitForm: SubmitHandler<TUserCreationForm> = data => {
+  const handleSubmitForm: SubmitHandler<TCourseCreationForm> = data => {
     mutate(data, {
-      onSuccess: () => {
-        reset()
-        setSuccessMessage('User created successfully')
+      onError: error => {
+        setErrorMessage(error.message || 'An error occurred')
       },
-      onError: () => {
-        setErrorMessage('Failed to create user')
+      onSuccess: () => {
+        setSuccessMessage('Course created successfully')
+        reset()
       },
     })
   }

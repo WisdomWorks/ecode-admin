@@ -11,6 +11,6 @@ export const menus: IMenu[] = [
   {
     Icon: LocalLibrary,
     label: 'Course Management',
-    to: '/' as const,
+    to: '/course-management/' as const,
   },
 ]
