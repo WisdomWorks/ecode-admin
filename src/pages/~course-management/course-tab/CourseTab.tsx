@@ -1,64 +1,56 @@
 import { useState } from 'react'
 
-import { useGetUsers } from '@/api/useGetUsers'
-// import { useGetUsers } from '@/api/useGetUsers'
+import { useGetCourses } from '@/api'
 import { SearchInput, Table } from '@/components/common'
-import { OptionSelector } from '@/components/selector'
-import { Role, RoleOptions } from '@/constants'
 import { useToggle } from '@/hooks'
 import { Schema, TColumn } from '@/types'
 
 import { ConfirmDeleteModal } from './ConfirmDeleteModal'
-import { EditUserModal } from './EditUserModal'
+import { EditCourseModal } from './EditCourseModal'
 import { Delete, Edit } from '@mui/icons-material'
 import { IconButton } from '@mui/material'
 
-const columns: TColumn<Schema['User']>[] = [
+const columns: TColumn<Schema['Course']>[] = [
   {
-    accessorKey: 'name',
-    header: 'Name',
+    accessorKey: 'courseName',
+    header: 'Course Name',
   },
   {
-    accessorKey: 'email',
-    header: 'Email',
+    accessorKey: 'semester',
+    header: 'Semester',
   },
   {
-    accessorKey: 'username',
-    header: 'Username',
-  },
-  {
-    accessorKey: 'role',
-    header: 'Role',
+    accessorKey: 'description',
+    header: 'Description',
   },
 ]
 
-export const UserTab = () => {
-  const [isOpenDeleteModal, setIsOpenDeleteModal] = useToggle()
-  const [isOpenEditModal, setIsOpenEditModal] = useToggle()
-  const [userModal, setUserModal] = useState<Schema['User'] | null>(null)
-  const { data, isLoading, isRefetching, refetch } = useGetUsers()
+export const CourseTab = () => {
+  const { data, isLoading, isRefetching, refetch } = useGetCourses()
+  const [isOpenDeleteModal, toggleDeleteModal] = useToggle()
+  const [isOpenEditModal, toggleEditModal] = useToggle()
+  const [courseModal, setCourseModal] = useState<Schema['Course'] | null>(null)
 
   const [filter, setFilter] = useState({
     search: '',
-    role: Role.STUDENT,
   })
 
-  const { role, search } = filter
+  const { search } = filter
 
-  const handleDelete = (user: Schema['User']) => {
-    setUserModal(user)
-    setIsOpenDeleteModal()
+  const handleDelete = (course: Schema['Course']) => {
+    setCourseModal(course)
+    toggleDeleteModal()
   }
 
-  const handleEdit = (user: Schema['User']) => {
-    setUserModal(user)
-    setIsOpenEditModal()
+  const handleEdit = (course: Schema['Course']) => {
+    setCourseModal(course)
+    toggleEditModal()
   }
 
   const onCloseModal = () => {
-    isOpenDeleteModal && setIsOpenDeleteModal()
-    isOpenEditModal && setIsOpenEditModal()
-    setUserModal(null)
+    isOpenDeleteModal && toggleDeleteModal()
+    isOpenEditModal && toggleEditModal()
+    setCourseModal(null)
   }
 
   return (
@@ -71,21 +63,12 @@ export const UserTab = () => {
           }
           value={search}
         />
-        <OptionSelector
-          className="col-span-3"
-          label="Role"
-          onChange={(_, value) =>
-            setFilter(prev => ({ ...prev, role: value as Role }))
-          }
-          options={RoleOptions}
-          value={role}
-        />
       </div>
 
       <div>
         <Table
           columns={columns}
-          data={data?.users || []}
+          data={data || []}
           enableRowActions
           positionActionsColumn="last"
           renderRowActions={({ row: { original } }) => (
@@ -104,21 +87,21 @@ export const UserTab = () => {
         />
       </div>
 
-      {userModal && (
+      {courseModal && (
         <ConfirmDeleteModal
+          course={courseModal}
           isOpen={isOpenDeleteModal}
           onClose={onCloseModal}
           refetch={refetch}
-          user={userModal}
         />
       )}
 
-      {userModal && (
-        <EditUserModal
+      {courseModal && (
+        <EditCourseModal
+          course={courseModal}
           isOpen={isOpenEditModal}
           onClose={onCloseModal}
           refetch={refetch}
-          user={userModal}
         />
       )}
     </>
