@@ -1,7 +1,9 @@
 import {
   ChangeEventHandler,
   ComponentPropsWithoutRef,
+  Dispatch,
   DragEventHandler,
+  SetStateAction,
   useMemo,
   useRef,
   useState,
@@ -42,12 +44,20 @@ const getFileIcon = (type: AcceptTypeFile) => {
 type TAcceptTypeFileKeys = keyof typeof AcceptTypeFile
 
 type Props = ComponentPropsWithoutRef<'input'> & {
+  files: FileList | null
+  handleUpload?: () => void
+  setFiles: Dispatch<SetStateAction<FileList | null>>
   typeFiles?: TAcceptTypeFileKeys[]
 }
 
-export const FileUpload = ({ multiple, typeFiles }: Props) => {
+export const FileUpload = ({
+  files,
+  handleUpload,
+  multiple,
+  setFiles,
+  typeFiles,
+}: Props) => {
   const [isDragActive, setIsDragActive] = useState(false)
-  const [files, setFiles] = useState<FileList | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
   const { acceptTypeKey, acceptTypeValue } = useMemo(() => {
@@ -161,11 +171,7 @@ export const FileUpload = ({ multiple, typeFiles }: Props) => {
         <Button className="text-neutral-500" onClick={() => setFiles(null)}>
           Cancel
         </Button>
-        <Button
-          className="submitBtn"
-          disabled={!files}
-          onClick={() => setFiles(null)}
-        >
+        <Button className="submitBtn" disabled={!files} onClick={handleUpload}>
           Upload
         </Button>
       </div>
