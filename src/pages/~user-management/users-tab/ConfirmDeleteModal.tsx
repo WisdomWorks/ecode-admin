@@ -1,7 +1,6 @@
-import { useDeleteUser } from '@/api'
+import { TUser, useDeleteUser } from '@/api'
 import { Dialog } from '@/components/common'
 import { useToastMessage } from '@/hooks'
-import { Schema } from '@/types'
 
 import { Button } from '@mui/material'
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
@@ -12,7 +11,7 @@ interface Props {
   refetch: (
     options?: RefetchOptions | undefined,
   ) => Promise<QueryObserverResult>
-  user: Schema['User']
+  user: TUser
 }
 
 export const ConfirmDeleteModal = ({

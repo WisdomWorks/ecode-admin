@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 
+import { TUser } from '@/api'
 import { useUpdateUser } from '@/api/useUpdateUser'
 import { Dialog } from '@/components/common'
 import { Form } from '@/components/form'
@@ -19,7 +20,7 @@ interface Props {
   refetch: (
     options?: RefetchOptions | undefined,
   ) => Promise<QueryObserverResult>
-  user: Schema['User']
+  user: TUser
 }
 
 export const EditUserModal = ({ isOpen, onClose, refetch, user }: Props) => {

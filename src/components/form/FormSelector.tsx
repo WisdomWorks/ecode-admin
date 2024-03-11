@@ -16,9 +16,10 @@ export const FormSelector = <TForm extends FieldValues, TData>({
   options = [],
   renderInput,
   required,
+  ...rest
 }: Props<TForm, TData>) => {
   const {
-    field: { onBlur, onChange, value },
+    field: { onBlur, onChange: onChangeRHF, value },
     fieldState: { error },
   } = useController<TForm>({
     name,
@@ -27,6 +28,7 @@ export const FormSelector = <TForm extends FieldValues, TData>({
 
   return (
     <OptionSelector<TData>
+      {...rest}
       className={className}
       clearOnBlur={clearOnBlur}
       error={!!error}
@@ -35,7 +37,7 @@ export const FormSelector = <TForm extends FieldValues, TData>({
       label={label}
       multiple={multiple}
       onBlur={onBlur}
-      onChange={(_, data) => onChange(data)}
+      onChange={(_, data) => onChangeRHF(data)}
       options={options}
       renderInput={renderInput}
       required={required}

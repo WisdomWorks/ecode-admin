@@ -5,6 +5,11 @@
 
 
 export interface paths {
+  "/topics": {
+    get: operations["getAllTopicsByCourseId"];
+    put: operations["updateTopic"];
+    post: operations["createTopic"];
+  };
   "/exercises/{exerciseId}/run": {
     put: operations["runCode"];
   };
@@ -13,12 +18,32 @@ export interface paths {
     post: operations["createCodeExercise"];
   };
   "/users": {
-    get: operations["getAllUsers"];
+    get: operations["getUsersByRoleOrAll"];
     post: operations["createUser"];
     patch: operations["updateById"];
   };
   "/users/import-users": {
     post: operations["importUsersByExcel"];
+  };
+  "/topics/view": {
+    get: operations["getPublicGroups"];
+    post: operations["addViewPermission"];
+    delete: operations["removeViewPermission"];
+  };
+  "/materials": {
+    post: operations["createOne"];
+    patch: operations["updateByMaterialAndTopicId"];
+  };
+  "/materials/view": {
+    get: operations["getPublicMaterials"];
+    post: operations["addViewPermission_1"];
+    delete: operations["removeViewPermission_1"];
+  };
+  "/groups": {
+    post: operations["createGroup"];
+  };
+  "/groups/student": {
+    post: operations["addStudentsToGroup"];
   };
   "/exercises/{exerciseId}/submit": {
     post: operations["submitCodeExercise"];
@@ -26,25 +51,84 @@ export interface paths {
   "/exercises/{exerciseId}/check-key": {
     post: operations["checkCodeExerciseKey"];
   };
+  "/exercises/quiz": {
+    post: operations["createQuizExercise"];
+    patch: operations["updateQuizExercise"];
+  };
+  "/exercises/quiz/submit": {
+    post: operations["submitQuizExercise"];
+  };
   "/courses": {
     get: operations["getAll"];
-    post: operations["createOne"];
+    post: operations["createOne_1"];
     patch: operations["updateById_1"];
+  };
+  "/courses/student": {
+    post: operations["addStudentToCourse"];
+    delete: operations["deleteById_3"];
+  };
+  "/courses/import-students": {
+    post: operations["addStudentsToCourse"];
   };
   "/courses/import-courses": {
     post: operations["importCoursesByExcel"];
+  };
+  "/auth/logout": {
+    post: operations["Logout"];
+  };
+  "/auth/login/user": {
+    post: operations["signInUser"];
+  };
+  "/auth/login/admin": {
+    post: operations["signInAdmin"];
   };
   "/users/{userId}": {
     get: operations["getById"];
     delete: operations["deleteById"];
   };
+  "/users/get-by-user-name/{username}": {
+    get: operations["getUserByUserName"];
+  };
+  "/topics/{topicId}": {
+    get: operations["getTopic"];
+    delete: operations["deleteTopic"];
+  };
+  "/materials/{topicId}": {
+    get: operations["getMaterialsByTopicId"];
+  };
+  "/materials/{materialId}": {
+    get: operations["getById_1"];
+    delete: operations["deleteById_1"];
+  };
+  "/groups/{groupId}": {
+    get: operations["getGroupById"];
+    delete: operations["deleteGroup"];
+  };
+  "/groups/{groupId}/student/not-in-group": {
+    get: operations["getStudentNotInGroup"];
+  };
+  "/groups/{groupId}/student/in-group": {
+    get: operations["getStudentInGroup"];
+  };
+  "/groups/course/{courseId}": {
+    get: operations["getGroupsByCourseId"];
+  };
   "/exercises": {
     get: operations["getAllExerciseByCourseId"];
     delete: operations["deleteExerciseById"];
   };
+  "/exercises/exercise": {
+    get: operations["getExerciseById"];
+  };
   "/courses/{courseId}": {
-    get: operations["getById_1"];
-    delete: operations["deleteById_1"];
+    get: operations["getById_2"];
+    delete: operations["deleteById_2"];
+  };
+  "/auth/check-session": {
+    get: operations["checkSession"];
+  };
+  "/groups/{groupId}/student": {
+    delete: operations["deleteStudentInGroup"];
   };
 }
 
@@ -52,6 +136,11 @@ export type webhooks = Record<string, never>;
 
 export interface components {
   schemas: {
+    UpdateTopicRequest: {
+      topicId: string;
+      topicName?: string;
+      description?: string;
+    };
     IOTestCase: {
       value: string;
       dataType: string;
@@ -81,19 +170,76 @@ export interface components {
       description: string;
       testcases: string[];
     };
-    User: {
-      userId: string;
+    CreateUserRequest: {
       name: string;
       email: string;
       username: string;
       role: string;
-      /** Format: date-time */
-      createdDate?: string;
-      /** Format: date-time */
-      updatedDate?: string;
+    };
+    CreateTopicRequest: {
+      courseId: string;
+      topicName: string;
+      description?: string;
+    };
+    CreateMaterialRequest: {
+      materialType: string;
+      topicId: string;
+      url?: string;
+      description?: string;
+    };
+    CreateGroupRequest: {
+      courseId: string;
+      groupName: string;
+    };
+    CreateGroupStudentRequest: {
+      studentIds: string[];
+      description?: string;
+      groupId: string;
     };
     SubmitCodeRequest: {
       containerId?: string;
+    };
+    QuizChoice: {
+      choiceId?: string;
+      content: string;
+    };
+    QuizExercise: {
+      exerciseId?: string;
+      topicId: string;
+      exerciseName: string;
+      key: string;
+      createdDate?: string;
+      updatedDate?: string;
+      /** Format: date-time */
+      startTime: string;
+      /** Format: date-time */
+      endTime: string;
+      type: string;
+      publicGroupIds: string[];
+      questions: components["schemas"]["QuizQuestion"][];
+    };
+    QuizQuestion: {
+      questionId?: string;
+      title: string;
+      description: string;
+      choices: components["schemas"]["QuizChoice"][];
+      answers: components["schemas"]["QuizChoice"][];
+    };
+    QuizAnswers: {
+      quizAnswerId?: string;
+      questionId: string;
+      answers: components["schemas"]["QuizChoice"][];
+    };
+    QuizSubmission: {
+      submissionId?: string;
+      studentId: string;
+      exerciseId: string;
+      /** Format: float */
+      score?: number;
+      dateSubmit?: string;
+      dateGrade?: string;
+      reviewable: boolean;
+      submission: components["schemas"]["QuizAnswers"][];
     };
     CreateCodeExerciseRequest: {
       topicId: string;
@@ -116,15 +262,24 @@ export interface components {
       inputs: components["schemas"]["IOTestCase"][];
       output: components["schemas"]["IOTestCase"];
     };
-    Course: {
-      courseId: string;
+    CreateCourseRequest: {
       courseName: string;
       semester?: string;
       description?: string;
-      /** Format: date-time */
-      createdDate: string;
-      /** Format: date-time */
-      updatedDate: string;
+      teacherId: string;
+    };
+    AddStudentToCourseRequest: {
+      studentIds?: string[];
+      courseId: string;
+    };
+    ImportStudentToCourseRequest: {
+      courseId: string;
+      /** Format: binary */
+      file: string;
+    };
+    LoginRequest: {
+      userName?: string;
+      password?: string;
     };
     UpdateUserRequest: {
       userId: string;
@@ -136,40 +291,37 @@ export interface components {
       /** Format: date-time */
       createdDate?: string;
     };
+    UpdateMaterialRequest: {
+      materialId: string;
+      materialType?: string;
+      topicId?: string;
+      url?: string;
+      description?: string;
+    };
+    UpdateQuizExerciseRequest: {
+      topicId?: string;
+      exerciseName?: string;
+      key?: string;
+      /** Format: date-time */
+      startTime?: string;
+      /** Format: date-time */
+      endTime?: string;
+      publicGroupIds?: string[];
+      questions?: components["schemas"]["QuizQuestion"][];
+    };
     UpdateCourseRequest: {
       courseId: string;
       courseName?: string;
       semester?: string;
       description?: string;
     };
-    GetUsersRequest: {
-      role?: string;
-      searchKeyword?: string;
-      /** Format: int32 */
-      pageNumber?: number;
-      /** Format: int32 */
-      pageSize?: number;
-      pageable?: components["schemas"]["PageableObject"];
-    };
-    PageableObject: {
-      /** Format: int64 */
-      offset?: number;
-      sort?: components["schemas"]["SortObject"];
-      paged?: boolean;
-      unpaged?: boolean;
-      /** Format: int32 */
-      pageNumber?: number;
-      /** Format: int32 */
-      pageSize?: number;
-    };
-    SortObject: {
-      empty?: boolean;
-      unsorted?: boolean;
-      sorted?: boolean;
-    };
     DeleteExerciseRequest: {
       exerciseId: string;
       type: string;
+    };
+    RemoveStudentFromCourseRequest: {
+      studentId: string;
+      courseId: string;
     };
   };
   responses: never;
@@ -185,6 +337,69 @@ export type external = Record<string, never>;
 
 export interface operations {
 
+  getAllTopicsByCourseId: {
+    parameters: {
+      query: {
+        courseId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  updateTopic: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["UpdateTopicRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  createTopic: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateTopicRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
   runCode: {
     parameters: {
       path: {
@@ -253,10 +468,10 @@ export interface operations {
       };
     };
   };
-  getAllUsers: {
+  getUsersByRoleOrAll: {
     parameters: {
-      query: {
-        getUsersRequest: components["schemas"]["GetUsersRequest"];
+      query?: {
+        role?: string;
       };
     };
     responses: {
@@ -277,7 +492,7 @@ export interface operations {
   createUser: {
     requestBody: {
       content: {
-        "application/json": components["schemas"]["User"];
+        "application/json": components["schemas"]["CreateUserRequest"];
       };
     };
     responses: {
@@ -323,6 +538,225 @@ export interface operations {
           /** Format: binary */
           file: string;
         };
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  getPublicGroups: {
+    parameters: {
+      query: {
+        topicId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  addViewPermission: {
+    parameters: {
+      query: {
+        topicId: string;
+        groupIds: string[];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  removeViewPermission: {
+    parameters: {
+      query: {
+        topicId: string;
+        groupIds: string[];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  createOne: {
+    parameters: {
+      query: {
+        file: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateMaterialRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  updateByMaterialAndTopicId: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["UpdateMaterialRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  getPublicMaterials: {
+    parameters: {
+      query: {
+        materialId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  addViewPermission_1: {
+    parameters: {
+      query: {
+        materialId: string;
+        groupIds: string[];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  removeViewPermission_1: {
+    parameters: {
+      query: {
+        materialId: string;
+        groupIds: string[];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  createGroup: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateGroupRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  addStudentsToGroup: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateGroupStudentRequest"];
       };
     };
     responses: {
@@ -387,6 +821,74 @@ export interface operations {
       };
     };
   };
+  createQuizExercise: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["QuizExercise"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  updateQuizExercise: {
+    parameters: {
+      query: {
+        exerciseId: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["UpdateQuizExerciseRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  submitQuizExercise: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["QuizSubmission"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
   getAll: {
     responses: {
       /** @description OK */
@@ -403,10 +905,10 @@ export interface operations {
       };
     };
   };
-  createOne: {
+  createOne_1: {
     requestBody: {
       content: {
-        "application/json": components["schemas"]["Course"];
+        "application/json": components["schemas"]["CreateCourseRequest"];
       };
     };
     responses: {
@@ -445,6 +947,69 @@ export interface operations {
       };
     };
   };
+  addStudentToCourse: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["AddStudentToCourseRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  deleteById_3: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["RemoveStudentFromCourseRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  addStudentsToCourse: {
+    requestBody?: {
+      content: {
+        "application/json": components["schemas"]["ImportStudentToCourseRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
   importCoursesByExcel: {
     requestBody?: {
       content: {
@@ -452,6 +1017,64 @@ export interface operations {
           /** Format: binary */
           file: string;
         };
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  Logout: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  signInUser: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["LoginRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  signInAdmin: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["LoginRequest"];
       };
     };
     responses: {
@@ -511,6 +1134,240 @@ export interface operations {
       };
     };
   };
+  getUserByUserName: {
+    parameters: {
+      query: {
+        role: string;
+      };
+      path: {
+        username: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  getTopic: {
+    parameters: {
+      path: {
+        topicId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  deleteTopic: {
+    parameters: {
+      path: {
+        topicId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  getMaterialsByTopicId: {
+    parameters: {
+      path: {
+        topicId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  getById_1: {
+    parameters: {
+      path: {
+        materialId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  deleteById_1: {
+    parameters: {
+      path: {
+        materialId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  getGroupById: {
+    parameters: {
+      path: {
+        groupId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  deleteGroup: {
+    parameters: {
+      path: {
+        groupId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  getStudentNotInGroup: {
+    parameters: {
+      path: {
+        groupId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  getStudentInGroup: {
+    parameters: {
+      path: {
+        groupId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  getGroupsByCourseId: {
+    parameters: {
+      path: {
+        courseId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
   getAllExerciseByCourseId: {
     parameters: {
       query: {
@@ -553,7 +1410,28 @@ export interface operations {
       };
     };
   };
-  getById_1: {
+  getExerciseById: {
+    parameters: {
+      query: {
+        exerciseId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  getById_2: {
     parameters: {
       path: {
         courseId: string;
@@ -574,10 +1452,52 @@ export interface operations {
       };
     };
   };
-  deleteById_1: {
+  deleteById_2: {
     parameters: {
       path: {
         courseId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  checkSession: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  deleteStudentInGroup: {
+    parameters: {
+      path: {
+        groupId: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": string[];
       };
     };
     responses: {

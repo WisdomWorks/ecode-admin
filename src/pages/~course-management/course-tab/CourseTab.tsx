@@ -1,16 +1,16 @@
 import { useState } from 'react'
 
-import { useGetCourses } from '@/api'
+import { TCourse, useGetCourses } from '@/api'
 import { SearchInput, Table } from '@/components/common'
 import { useToggle } from '@/hooks'
-import { Schema, TColumn } from '@/types'
+import { TColumn } from '@/types'
 
 import { ConfirmDeleteModal } from './ConfirmDeleteModal'
 import { EditCourseModal } from './EditCourseModal'
 import { Delete, Edit } from '@mui/icons-material'
 import { IconButton } from '@mui/material'
 
-const columns: TColumn<Schema['Course']>[] = [
+const columns: TColumn<TCourse>[] = [
   {
     accessorKey: 'courseName',
     header: 'Course Name',
@@ -29,7 +29,7 @@ export const CourseTab = () => {
   const { data, isLoading, isRefetching, refetch } = useGetCourses()
   const [isOpenDeleteModal, toggleDeleteModal] = useToggle()
   const [isOpenEditModal, toggleEditModal] = useToggle()
-  const [courseModal, setCourseModal] = useState<Schema['Course'] | null>(null)
+  const [courseModal, setCourseModal] = useState<TCourse | null>(null)
 
   const [filter, setFilter] = useState({
     search: '',
@@ -37,12 +37,12 @@ export const CourseTab = () => {
 
   const { search } = filter
 
-  const handleDelete = (course: Schema['Course']) => {
+  const handleDelete = (course: TCourse) => {
     setCourseModal(course)
     toggleDeleteModal()
   }
 
-  const handleEdit = (course: Schema['Course']) => {
+  const handleEdit = (course: TCourse) => {
     setCourseModal(course)
     toggleEditModal()
   }

@@ -1,14 +1,17 @@
-import { Schema } from '@/types'
-
-import { callAPI, Pagination } from './axios'
+import { callAPI } from './axios'
 import { useQuery } from '@tanstack/react-query'
 
-type TResponse = {
-  pagination: Pagination
-  users: Schema['User'][]
+export type TUser = {
+  createdDate: string
+  email: string
+  name: string
+  role: string
+  updatedDate: string
+  userId: string
+  username: string
 }
 
-const fetchUsers = async (): Promise<TResponse> => {
+const fetchUsers = async (): Promise<TUser[]> => {
   const response = await callAPI('/users', 'get')
 
   return response.data

@@ -1,6 +1,6 @@
 import { SubmitHandler, useForm } from 'react-hook-form'
 
-import { useCreateCourse } from '@/api'
+import { useAddStudentsToCourse, useCreateCourse } from '@/api'
 import { Form, FormCardRadio } from '@/components/form'
 import { useToastMessage } from '@/hooks'
 import { createOptions, CreationOption } from '@/types'
@@ -14,12 +14,15 @@ import { zodResolver } from '@hookform/resolvers/zod'
 export const CourseCreationTab = () => {
   const { setErrorMessage, setSuccessMessage } = useToastMessage()
   const { mutate } = useCreateCourse()
+  const { mutate: addStudents } = useAddStudentsToCourse()
   const form = useForm<TCourseCreationForm>({
     defaultValues: {
       creationOption: CreationOption.Manually,
       courseName: '',
       description: '',
       semester: '',
+      teacher: null,
+      students: [],
     },
     mode: 'onChange',
     resolver: zodResolver(CreateCourseSchema),
@@ -28,12 +31,27 @@ export const CourseCreationTab = () => {
   const { control, reset, watch } = form
 
   const handleSubmitForm: SubmitHandler<TCourseCreationForm> = data => {
-    mutate(data, {
+    if (!data.teacher) return
+    const { students, teacher, ...rest } = data
+    const formatData = {
+      ...rest,
+      teacherId: teacher.userId,
+    }
+
+    mutate(formatData, {
       onError: error => {
-        setErrorMessage(error.message || 'An error occurred')
+        setErrorMessage(error.response?.data.message || 'An error occurred')
       },
-      onSuccess: () => {
+      onSuccess: data => {
         setSuccessMessage('Course created successfully')
+        if (students.length) {
+          students.forEach(student => {
+            addStudents({
+              courseId: data.data.courseId,
+              studentIds: student.userId,
+            })
+          })
+        }
         reset()
       },
     })

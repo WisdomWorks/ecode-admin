@@ -1,11 +1,10 @@
 import { useMemo } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 
-import { useUpdateCourse } from '@/api'
+import { TCourse, useUpdateCourse } from '@/api'
 import { Dialog } from '@/components/common'
 import { Form } from '@/components/form'
 import { useToastMessage } from '@/hooks'
-import { Schema } from '@/types'
 
 import { CreateManuallyForm } from '../create-course-tab/CreateManuallyForm'
 import { CreateCourseSchema } from '../schemas'
@@ -14,7 +13,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
 
 interface Props {
-  course: Schema['Course']
+  course: TCourse
   isOpen: boolean
   onClose: () => void
   refetch: (
@@ -31,7 +30,8 @@ export const EditCourseModal = ({
   const { setErrorMessage, setSuccessMessage } = useToastMessage()
   const { mutate } = useUpdateCourse()
 
-  const { courseId, courseName, description, semester } = course
+  const { courseId, courseName, description, semester, students, teacher } =
+    course
 
   const defaultValues = useMemo(() => {
     return {
@@ -39,8 +39,10 @@ export const EditCourseModal = ({
       courseName,
       description,
       semester,
+      teacher,
+      students: students || [],
     }
-  }, [courseId, courseName, description, semester])
+  }, [courseId, courseName, description, semester, students, teacher])
 
   const form = useForm<TCourseCreationForm>({
     defaultValues,
@@ -54,7 +56,7 @@ export const EditCourseModal = ({
     mutate(
       {
         ...data,
-        courseId: course.courseId,
+        courseId: String(course.courseId),
       },
       {
         onSuccess: () => {
@@ -82,6 +84,7 @@ export const EditCourseModal = ({
           isUpdate
           onCloseModalEdit={onClose}
           reset={reset}
+          studentsOnCourse={students}
         />
       </Form>
     </Dialog>

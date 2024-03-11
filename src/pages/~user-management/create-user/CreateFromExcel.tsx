@@ -1,19 +1,29 @@
 import { useState } from 'react'
 
-import { useImportUsers } from '@/api/useImportUsers'
+import { useImportUsers } from '@/api'
 import { FileUpload } from '@/components/common'
+import { useToastMessage } from '@/hooks'
 
 import { Download } from '@mui/icons-material'
 import { Button } from '@mui/material'
 export const CreateFromExcel = () => {
-  const { mutate } = useImportUsers()
+  const { isPending, mutate } = useImportUsers()
   const [files, setFiles] = useState<FileList | null>(null)
+  const { setErrorMessage, setSuccessMessage } = useToastMessage()
 
   const handleUpload = async () => {
     if (files) {
       const formData = new FormData()
       formData.append('file', files[0])
-      mutate(formData)
+      mutate(formData, {
+        onError: error => {
+          setErrorMessage(error.message || 'An error occurred')
+        },
+        onSuccess: () => {
+          setSuccessMessage('Users imported successfully')
+          setFiles(null)
+        },
+      })
     }
   }
 
@@ -26,8 +36,10 @@ export const CreateFromExcel = () => {
         <FileUpload
           files={files}
           handleUpload={handleUpload}
+          loading={isPending}
           multiple
           setFiles={setFiles}
+          typeFiles={['Excel']}
         />
       </div>
       <div className="flex flex-col gap-2 pl-8">

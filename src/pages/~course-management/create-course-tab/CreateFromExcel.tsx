@@ -1,15 +1,30 @@
 import { useState } from 'react'
 
+import { useImportCourses } from '@/api'
 import { FileUpload } from '@/components/common'
+import { useToastMessage } from '@/hooks'
 
 import { Download } from '@mui/icons-material'
 import { Button } from '@mui/material'
-
 export const CreateFromExcel = () => {
+  const { isPending, mutate } = useImportCourses()
   const [files, setFiles] = useState<FileList | null>(null)
+  const { setErrorMessage, setSuccessMessage } = useToastMessage()
 
-  const handleUpload = () => {
-    console.log(files)
+  const handleUpload = async () => {
+    if (files) {
+      const formData = new FormData()
+      formData.append('file', files[0])
+      mutate(formData, {
+        onError: error => {
+          setErrorMessage(error.message || 'An error occurred')
+        },
+        onSuccess: () => {
+          setSuccessMessage('Users imported successfully')
+          setFiles(null)
+        },
+      })
+    }
   }
 
   return (
@@ -21,7 +36,10 @@ export const CreateFromExcel = () => {
         <FileUpload
           files={files}
           handleUpload={handleUpload}
+          loading={isPending}
+          multiple
           setFiles={setFiles}
+          typeFiles={['Excel']}
         />
       </div>
       <div className="flex flex-col gap-2 pl-8">
@@ -34,12 +52,14 @@ export const CreateFromExcel = () => {
           multiple user accounts
         </p>
         <div>
+          {/* <a href={require('@/assets/templates/')}> */}
           <Button
             className="submitBtn"
             startIcon={<Download fontSize="large" />}
           >
             Download template
           </Button>
+          {/* </a> */}
         </div>
       </div>
     </div>

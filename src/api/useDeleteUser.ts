@@ -1,11 +1,10 @@
-import { Schema } from '@/types'
-
 import { callAPI, Path } from './axios'
+import { TUser } from './useGetUsers'
 import { useMutation } from '@tanstack/react-query'
 
 export const useDeleteUser = () => {
   return useMutation({
-    mutationFn: (userId: Schema['User']['userId']) => {
+    mutationFn: (userId: TUser) => {
       return callAPI(`/users/${userId}` as Path, 'delete')
     },
   })

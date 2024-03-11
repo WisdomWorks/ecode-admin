@@ -1,13 +1,12 @@
-import { useDeleteCourse } from '@/api'
+import { TCourse, useDeleteCourse } from '@/api'
 import { Dialog } from '@/components/common'
 import { useToastMessage } from '@/hooks'
-import { Schema } from '@/types'
 
 import { Button } from '@mui/material'
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
 
 interface Props {
-  course: Schema['Course']
+  course: TCourse
   isOpen: boolean
   onClose: () => void
   refetch: (

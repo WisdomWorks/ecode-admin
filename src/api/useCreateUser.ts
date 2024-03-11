@@ -1,11 +1,10 @@
-import { Schema } from '@/types'
-
 import { callAPI } from './axios'
+import { TUser } from './useGetUsers'
 import { useMutation } from '@tanstack/react-query'
 
 export const useCreateUser = () => {
   return useMutation({
-    mutationFn: (user: Schema['User']) => {
+    mutationFn: (user: TUser) => {
       return callAPI('/users', 'post', {
         data: user,
       })

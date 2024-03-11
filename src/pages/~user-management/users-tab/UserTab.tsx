@@ -1,19 +1,18 @@
 import { useState } from 'react'
 
-import { useGetUsers } from '@/api/useGetUsers'
-// import { useGetUsers } from '@/api/useGetUsers'
+import { TUser, useGetUsers } from '@/api'
 import { SearchInput, Table } from '@/components/common'
 import { OptionSelector } from '@/components/selector'
 import { Role, RoleOptions } from '@/constants'
 import { useToggle } from '@/hooks'
-import { Schema, TColumn } from '@/types'
+import { TColumn } from '@/types'
 
 import { ConfirmDeleteModal } from './ConfirmDeleteModal'
 import { EditUserModal } from './EditUserModal'
 import { Delete, Edit } from '@mui/icons-material'
 import { IconButton } from '@mui/material'
 
-const columns: TColumn<Schema['User']>[] = [
+const columns: TColumn<TUser>[] = [
   {
     accessorKey: 'name',
     header: 'Name',
@@ -35,7 +34,7 @@ const columns: TColumn<Schema['User']>[] = [
 export const UserTab = () => {
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useToggle()
   const [isOpenEditModal, setIsOpenEditModal] = useToggle()
-  const [userModal, setUserModal] = useState<Schema['User'] | null>(null)
+  const [userModal, setUserModal] = useState<TUser | null>(null)
   const { data, isLoading, isRefetching, refetch } = useGetUsers()
 
   const [filter, setFilter] = useState({
@@ -45,12 +44,12 @@ export const UserTab = () => {
 
   const { role, search } = filter
 
-  const handleDelete = (user: Schema['User']) => {
+  const handleDelete = (user: TUser) => {
     setUserModal(user)
     setIsOpenDeleteModal()
   }
 
-  const handleEdit = (user: Schema['User']) => {
+  const handleEdit = (user: TUser) => {
     setUserModal(user)
     setIsOpenEditModal()
   }
@@ -85,7 +84,7 @@ export const UserTab = () => {
       <div>
         <Table
           columns={columns}
-          data={data?.users || []}
+          data={data || []}
           enableRowActions
           positionActionsColumn="last"
           renderRowActions={({ row: { original } }) => (

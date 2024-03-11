@@ -1,5 +1,8 @@
+import { useLogout } from '@/api'
+
 import { KeyboardArrowUp, Logout } from '@mui/icons-material'
 import { Avatar, Button, MenuItem } from '@mui/material'
+import Cookies from 'js-cookie'
 import {
   bindHover,
   bindMenu,
@@ -8,10 +11,17 @@ import {
 import HoverMenu from 'material-ui-popup-state/HoverMenu'
 
 export const SidebarProfile = () => {
+  const { mutate: logout } = useLogout()
   const popupState = usePopupState({
     variant: 'popover',
     popupId: 'demoMenu',
   })
+
+  const handleLogout = () => {
+    logout()
+    Cookies.remove('authToken')
+    window.location.replace('/login')
+  }
 
   return (
     <div>
@@ -37,11 +47,14 @@ export const SidebarProfile = () => {
           horizontal: 'right',
         }}
         {...bindMenu(popupState)}
+        className="[&_ul]:p-2"
       >
         <MenuItem>View Details</MenuItem>
-        <MenuItem>
-          <Logout />
-          <span className="ml-2">Logout</span>
+        <MenuItem className="mt-2 rounded-md bg-danger-500 transition-all hover:bg-danger-600">
+          <Button onClick={handleLogout}>
+            <Logout className="text-white" />
+            <span className="ml-2 text-white">Logout</span>
+          </Button>
         </MenuItem>
       </HoverMenu>
     </div>

@@ -30,6 +30,14 @@ export const CreateManuallyForm = ({
           placeholder="Your full name"
           required
         />
+        <FormInput
+          className="col-span-4"
+          control={control}
+          label="Email"
+          name="email"
+          placeholder="Your email"
+          required
+        />
       </div>
       <FormInput
         className="col-span-4"
@@ -39,14 +47,7 @@ export const CreateManuallyForm = ({
         placeholder="Your username"
         required
       />
-      <FormInput
-        className="col-span-4"
-        control={control}
-        label="Email"
-        name="email"
-        placeholder="Your email"
-        required
-      />
+
       <div className="col-span-12 grid grid-cols-12 gap-4">
         <FormSelector
           className="col-span-4"

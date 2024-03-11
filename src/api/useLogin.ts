@@ -4,15 +4,20 @@ import { callAPI } from './axios'
 import { useMutation } from '@tanstack/react-query'
 import { AxiosError, AxiosResponse } from 'axios'
 
-export const useCreateCourse = () => {
+type TResponse = {
+  token: string
+}
+
+export const useLogin = () => {
   return useMutation<
-    AxiosResponse,
+    AxiosResponse<TResponse>,
     AxiosError<{ message: string }>,
-    Schema['CreateCourseRequest']
+    Schema['LoginRequest']
   >({
-    mutationFn: course => {
-      return callAPI('/courses', 'post', {
-        data: course,
+    mutationKey: ['login'],
+    mutationFn: async data => {
+      return await callAPI('/auth/login/admin', 'post', {
+        data,
       })
     },
   })

@@ -15,7 +15,7 @@ import {
   CloudUploadOutlined,
   InsertDriveFileRounded,
 } from '@mui/icons-material'
-import { Button } from '@mui/material'
+import { Button, LinearProgress } from '@mui/material'
 
 enum AcceptTypeFile {
   Audio = 'audio/*',
@@ -46,6 +46,7 @@ type TAcceptTypeFileKeys = keyof typeof AcceptTypeFile
 type Props = ComponentPropsWithoutRef<'input'> & {
   files: FileList | null
   handleUpload?: () => void
+  loading?: boolean
   setFiles: Dispatch<SetStateAction<FileList | null>>
   typeFiles?: TAcceptTypeFileKeys[]
 }
@@ -53,6 +54,7 @@ type Props = ComponentPropsWithoutRef<'input'> & {
 export const FileUpload = ({
   files,
   handleUpload,
+  loading,
   multiple,
   setFiles,
   typeFiles,
@@ -149,6 +151,8 @@ export const FileUpload = ({
         </label>
       </form>
 
+      <div className="mt-2">{loading && <LinearProgress />}</div>
+
       {files && (
         <div className="mt-2 flex max-h-36 flex-col overflow-x-hidden">
           <span className="text-base font-medium italic">Preview files:</span>
@@ -171,7 +175,11 @@ export const FileUpload = ({
         <Button className="text-neutral-500" onClick={() => setFiles(null)}>
           Cancel
         </Button>
-        <Button className="submitBtn" disabled={!files} onClick={handleUpload}>
+        <Button
+          className="submitBtn"
+          disabled={!files || loading}
+          onClick={handleUpload}
+        >
           Upload
         </Button>
       </div>
