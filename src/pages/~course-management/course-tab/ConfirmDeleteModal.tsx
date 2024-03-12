@@ -24,6 +24,7 @@ export const ConfirmDeleteModal = ({
   const { mutate } = useDeleteCourse()
 
   const onDelete = () => {
+    if (!course.courseId) return
     mutate(course.courseId, {
       onSuccess: () => {
         refetch()

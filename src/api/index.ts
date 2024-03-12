@@ -1,4 +1,5 @@
 export * from './useAddStudentsToCourse'
+export * from './useCheckSession'
 export * from './useCreateCourse'
 export * from './useCreateUser'
 export * from './useDeleteCourse'

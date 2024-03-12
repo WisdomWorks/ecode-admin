@@ -1,10 +1,11 @@
+import { TUserCreationForm } from '@/pages/~user-management/types'
+
 import { callAPI } from './axios'
-import { TUser } from './useGetUsers'
 import { useMutation } from '@tanstack/react-query'
 
 export const useCreateUser = () => {
   return useMutation({
-    mutationFn: (user: TUser) => {
+    mutationFn: (user: TUserCreationForm) => {
       return callAPI('/users', 'post', {
         data: user,
       })

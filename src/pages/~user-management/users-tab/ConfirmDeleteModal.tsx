@@ -24,6 +24,7 @@ export const ConfirmDeleteModal = ({
   const { mutate } = useDeleteUser()
 
   const onDelete = () => {
+    if (!user.userId) return
     mutate(user.userId, {
       onSuccess: () => {
         refetch()

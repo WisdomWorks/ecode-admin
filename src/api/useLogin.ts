@@ -1,17 +1,20 @@
 import { Schema } from '@/types'
 
-import { callAPI } from './axios'
+import { AxiosResponseError, callAPI } from './axios'
+import { TUser } from './useGetUsers'
 import { useMutation } from '@tanstack/react-query'
 import { AxiosError, AxiosResponse } from 'axios'
 
-type TResponse = {
+export type TResponseAuth = {
+  [key in keyof TUser]: TUser[key]
+} & {
   token: string
 }
 
 export const useLogin = () => {
   return useMutation<
-    AxiosResponse<TResponse>,
-    AxiosError<{ message: string }>,
+    AxiosResponse<TResponseAuth>,
+    AxiosError<AxiosResponseError>,
     Schema['LoginRequest']
   >({
     mutationKey: ['login'],

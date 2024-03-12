@@ -45,11 +45,9 @@ export const CourseCreationTab = () => {
       onSuccess: data => {
         setSuccessMessage('Course created successfully')
         if (students.length) {
-          students.forEach(student => {
-            addStudents({
-              courseId: data.data.courseId,
-              studentIds: student.userId,
-            })
+          addStudents({
+            courseId: data.data.courseId,
+            studentIds: students.map(student => student.userId),
           })
         }
         reset()

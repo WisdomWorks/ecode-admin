@@ -53,6 +53,8 @@ export const EditCourseModal = ({
   const { control, reset } = form
 
   const handleSubmitForm: SubmitHandler<TCourseCreationForm> = data => {
+    console.log(data)
+
     mutate(
       {
         ...data,

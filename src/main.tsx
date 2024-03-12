@@ -1,6 +1,8 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import ReactDOM from 'react-dom/client'
 
+import { configAuthorization } from './api/axios.ts'
+import { useCheckSession } from './api/useCheckSession.ts'
 import { useAuthStore } from './context/useAuthStore.tsx'
 import { routeTree } from './generated/routeTree.gen.ts'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
@@ -28,24 +30,53 @@ declare module '@tanstack/react-router' {
 }
 
 export const InnerApp = () => {
-  const user = useAuthStore(state => state.user)
+  const { data, isLoading } = useCheckSession()
+
+  useEffect(() => {
+    if (data) {
+      const {
+        createdDate,
+        email,
+        name,
+        role,
+        token,
+        updatedDate,
+        userId,
+        username,
+      } = data.data
+      configAuthorization(token)
+      useAuthStore.getState().setUser({
+        name,
+        role,
+        email,
+        userId,
+        username,
+        createdDate,
+        updatedDate,
+      })
+    }
+  }, [data])
+
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <SnackbarProvider autoHideDuration={2000} maxSnack={1}>
-        <RouterProvider
-          context={{
-            user: user,
-          }}
-          router={router}
-        />
-      </SnackbarProvider>
-    </QueryClientProvider>
+    <SnackbarProvider autoHideDuration={2000} maxSnack={1}>
+      <RouterProvider
+        context={{
+          user: undefined,
+        }}
+        router={router}
+      />
+    </SnackbarProvider>
   )
 }
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <InnerApp />
+    <QueryClientProvider client={queryClient}>
+      <InnerApp />
+    </QueryClientProvider>
   </React.StrictMode>,
 )

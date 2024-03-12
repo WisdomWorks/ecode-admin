@@ -1,6 +1,7 @@
 import { SubmitHandler, useForm } from 'react-hook-form'
 
-import { TUser, useLogin } from '@/api'
+import { useLogin } from '@/api'
+import { configAuthorization } from '@/api/axios'
 import { Form, FormInput, FormInputPassword } from '@/components/form'
 import { useAuthStore } from '@/context/useAuthStore'
 import { useToastMessage } from '@/hooks'
@@ -10,7 +11,6 @@ import { LoginRequestSchema } from './login.schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@mui/material'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import Cookies from 'js-cookie'
 
 type TLogin = Schema['LoginRequest']
 
@@ -33,10 +33,26 @@ export const Login = () => {
     mutate(data, {
       onSuccess: data => {
         setSuccessMessage('Login successfully!')
-        Cookies.set('authToken', data.data.token)
+        const {
+          createdDate,
+          email,
+          name,
+          role,
+          token,
+          updatedDate,
+          userId,
+          username,
+        } = data.data
+        configAuthorization(token)
         setUser({
-          name: 'admin',
-        } as TUser)
+          name,
+          role,
+          email,
+          userId,
+          username,
+          createdDate,
+          updatedDate,
+        })
         navigate({ to: '/' })
       },
       onError: error =>

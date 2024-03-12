@@ -2,7 +2,6 @@ import { useLogout } from '@/api'
 
 import { KeyboardArrowUp, Logout } from '@mui/icons-material'
 import { Avatar, Button, MenuItem } from '@mui/material'
-import Cookies from 'js-cookie'
 import {
   bindHover,
   bindMenu,
@@ -19,7 +18,6 @@ export const SidebarProfile = () => {
 
   const handleLogout = () => {
     logout()
-    Cookies.remove('authToken')
     window.location.replace('/login')
   }
 

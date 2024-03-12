@@ -26,6 +26,8 @@ export type Pagination = {
   totalRecord: number
 }
 
+export type AxiosResponseError = { message: string }
+
 export const instance = axios.create({
   baseURL:
     import.meta.env.MODE === 'development'
@@ -35,10 +37,12 @@ export const instance = axios.create({
   withCredentials: true,
 })
 
-instance.interceptors.request.use(config => {
-  const token = Cookies.get('authToken')
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`
-  }
-  return config
-})
+export const configAuthorization = (token?: string) => {
+  const jwtToken = token || Cookies.get('accessToken')
+  instance.interceptors.request.use(config => {
+    if (jwtToken) {
+      config.headers.Authorization = `Bearer ${jwtToken}`
+    }
+    return config
+  })
+}
