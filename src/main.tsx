@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 
 import { configAuthorization } from './api/axios.ts'
 import { useCheckSession } from './api/useCheckSession.ts'
+import { BackDropLoading } from './components/common/BackDropLoading.tsx'
 import { useAuthStore } from './context/useAuthStore.tsx'
 import { routeTree } from './generated/routeTree.gen.ts'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
@@ -58,7 +59,7 @@ export const InnerApp = () => {
   }, [data])
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return <BackDropLoading />
   }
 
   return (

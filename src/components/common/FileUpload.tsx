@@ -171,18 +171,20 @@ export const FileUpload = ({
         </div>
       )}
 
-      <div className="mt-2 flex justify-end gap-1">
-        <Button className="text-neutral-500" onClick={() => setFiles(null)}>
-          Cancel
-        </Button>
-        <Button
-          className="submitBtn"
-          disabled={!files || loading}
-          onClick={handleUpload}
-        >
-          Upload
-        </Button>
-      </div>
+      {handleUpload && (
+        <div className="mt-2 flex justify-end gap-1">
+          <Button className="text-neutral-500" onClick={() => setFiles(null)}>
+            Cancel
+          </Button>
+          <Button
+            className="submitBtn"
+            disabled={!files || loading}
+            onClick={handleUpload}
+          >
+            Upload
+          </Button>
+        </div>
+      )}
     </div>
   )
 }

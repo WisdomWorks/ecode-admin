@@ -13,7 +13,7 @@ export const useAuthStore = create<AuthState>()(set => ({
   user: null,
   setUser: user => set(() => ({ user })),
   checkSession: async () => {
-    const data = await callAPI('/auth/check-session', 'get')
+    const data = await callAPI('/auth/check-session/admin', 'get')
     const {
       createdDate,
       email,

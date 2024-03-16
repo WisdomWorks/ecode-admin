@@ -16,4 +16,5 @@ export const CreateCourseSchema = z.object({
       name: z.string(),
     })
     .array(),
+  createStudentOption: z.string(),
 })

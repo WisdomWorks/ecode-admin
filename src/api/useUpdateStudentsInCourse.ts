@@ -4,15 +4,16 @@ import { callAPI } from './axios'
 import { useMutation } from '@tanstack/react-query'
 import { AxiosError, AxiosResponse } from 'axios'
 
-export const useUpdateCourse = () => {
+export const useUpdateStudentsInCourse = () => {
   return useMutation<
     AxiosResponse,
     AxiosError<{ message: string }>,
-    Schema['UpdateCourseRequest']
+    Schema['UpdateStudentsToCourseRequest']
   >({
-    mutationFn: (course: Schema['UpdateCourseRequest']) => {
-      return callAPI('/courses', 'put', {
-        data: course,
+    mutationKey: ['updateStudentsToCourse'],
+    mutationFn: async data => {
+      return await callAPI('/courses/students', 'put', {
+        data,
       })
     },
   })

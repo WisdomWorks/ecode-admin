@@ -1,9 +1,7 @@
 import { useState } from 'react'
 
 import { TUser, useGetUsers } from '@/api'
-import { SearchInput, Table } from '@/components/common'
-import { OptionSelector } from '@/components/selector'
-import { Role, RoleOptions } from '@/constants'
+import { Table } from '@/components/common'
 import { useToggle } from '@/hooks'
 import { TColumn } from '@/types'
 
@@ -37,13 +35,6 @@ export const UserTab = () => {
   const [userModal, setUserModal] = useState<TUser | null>(null)
   const { data, isLoading, isRefetching, refetch } = useGetUsers()
 
-  const [filter, setFilter] = useState({
-    search: '',
-    role: Role.STUDENT,
-  })
-
-  const { role, search } = filter
-
   const handleDelete = (user: TUser) => {
     setUserModal(user)
     setIsOpenDeleteModal()
@@ -62,25 +53,6 @@ export const UserTab = () => {
 
   return (
     <>
-      <div className="grid grid-cols-12 gap-4">
-        <SearchInput
-          className="col-span-4"
-          onChange={e =>
-            setFilter(prev => ({ ...prev, search: e.target.value }))
-          }
-          value={search}
-        />
-        <OptionSelector
-          className="col-span-3"
-          label="Role"
-          onChange={(_, value) =>
-            setFilter(prev => ({ ...prev, role: value as Role }))
-          }
-          options={RoleOptions}
-          value={role}
-        />
-      </div>
-
       <div>
         <Table
           columns={columns}

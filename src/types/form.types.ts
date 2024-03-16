@@ -23,3 +23,8 @@ export const createOptions: IFormCardRadioOption[] = [
       'Create new user by fill the form. The password will be automatically generated and attached to the notification email to students ',
   },
 ]
+
+export interface IFormRadioOption {
+  label: string
+  value: string
+}

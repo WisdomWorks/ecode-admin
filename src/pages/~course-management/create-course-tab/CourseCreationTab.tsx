@@ -1,6 +1,11 @@
-import { SubmitHandler, useForm } from 'react-hook-form'
+import { useState } from 'react'
+import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 
-import { useAddStudentsToCourse, useCreateCourse } from '@/api'
+import {
+  useAddStudentsToCourse,
+  useCreateCourse,
+  useImportStudentsToCourse,
+} from '@/api'
 import { Form, FormCardRadio } from '@/components/form'
 import { useToastMessage } from '@/hooks'
 import { createOptions, CreationOption } from '@/types'
@@ -13,8 +18,12 @@ import { zodResolver } from '@hookform/resolvers/zod'
 
 export const CourseCreationTab = () => {
   const { setErrorMessage, setSuccessMessage } = useToastMessage()
+  const { isPending, mutate: importStudentsToCourse } =
+    useImportStudentsToCourse()
+  const [files, setFiles] = useState<FileList | null>(null)
   const { mutate } = useCreateCourse()
   const { mutate: addStudents } = useAddStudentsToCourse()
+
   const form = useForm<TCourseCreationForm>({
     defaultValues: {
       creationOption: CreationOption.Manually,
@@ -23,16 +32,18 @@ export const CourseCreationTab = () => {
       semester: '',
       teacher: null,
       students: [],
+      createStudentOption: CreationOption.Manually,
     },
     mode: 'onChange',
     resolver: zodResolver(CreateCourseSchema),
   })
 
-  const { control, reset, watch } = form
+  const { reset, watch } = form
 
   const handleSubmitForm: SubmitHandler<TCourseCreationForm> = data => {
     if (!data.teacher) return
-    const { students, teacher, ...rest } = data
+
+    const { createStudentOption, students, teacher, ...rest } = data
     const formatData = {
       ...rest,
       teacherId: teacher.userId,
@@ -44,11 +55,20 @@ export const CourseCreationTab = () => {
       },
       onSuccess: data => {
         setSuccessMessage('Course created successfully')
-        if (students.length) {
+        if (
+          students.length &&
+          createStudentOption === CreationOption.Manually
+        ) {
           addStudents({
             courseId: data.data.courseId,
             studentIds: students.map(student => student.userId),
           })
+        }
+        if (files && createStudentOption === CreationOption.Import) {
+          const formData = new FormData()
+          formData.append('file', files[0])
+          formData.append('courseId', data.data.courseId)
+          importStudentsToCourse(formData)
         }
         reset()
       },
@@ -56,23 +76,31 @@ export const CourseCreationTab = () => {
   }
 
   return (
-    <Form
-      className="grid grid-cols-12 gap-4"
-      form={form}
-      onSubmit={handleSubmitForm}
-    >
-      <FormCardRadio
-        className="flex flex-row flex-nowrap gap-4"
-        containerClassName="col-span-12"
-        name="creationOption"
-        options={createOptions}
-      />
+    <FormProvider {...form}>
+      <Form
+        className="grid grid-cols-12 gap-4"
+        form={form}
+        onSubmit={handleSubmitForm}
+      >
+        <FormCardRadio
+          className="flex flex-row flex-nowrap gap-4"
+          containerClassName="col-span-12"
+          name="creationOption"
+          options={createOptions}
+        />
 
-      {watch('creationOption') === CreationOption.Manually && (
-        <CreateManuallyForm control={control} reset={reset} />
-      )}
+        {watch('creationOption') === CreationOption.Manually && (
+          <CreateManuallyForm
+            files={files}
+            isPendingUploadFile={isPending}
+            setFiles={setFiles}
+          />
+        )}
 
-      {watch('creationOption') === CreationOption.Import && <CreateFromExcel />}
-    </Form>
+        {watch('creationOption') === CreationOption.Import && (
+          <CreateFromExcel />
+        )}
+      </Form>
+    </FormProvider>
   )
 }

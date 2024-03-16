@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 import { TCourse, useGetCourses } from '@/api'
-import { SearchInput, Table } from '@/components/common'
+import { Table } from '@/components/common'
 import { useToggle } from '@/hooks'
 import { TColumn } from '@/types'
 
@@ -31,12 +31,6 @@ export const CourseTab = () => {
   const [isOpenEditModal, toggleEditModal] = useToggle()
   const [courseModal, setCourseModal] = useState<TCourse | null>(null)
 
-  const [filter, setFilter] = useState({
-    search: '',
-  })
-
-  const { search } = filter
-
   const handleDelete = (course: TCourse) => {
     setCourseModal(course)
     toggleDeleteModal()
@@ -55,16 +49,6 @@ export const CourseTab = () => {
 
   return (
     <>
-      <div className="grid grid-cols-12 gap-4">
-        <SearchInput
-          className="col-span-4"
-          onChange={e =>
-            setFilter(prev => ({ ...prev, search: e.target.value }))
-          }
-          value={search}
-        />
-      </div>
-
       <div>
         <Table
           columns={columns}
