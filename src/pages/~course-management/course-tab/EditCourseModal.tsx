@@ -118,11 +118,14 @@ export const EditCourseModal = ({
           students.length &&
           createStudentOption === CreationOption.Manually
         ) {
-          handleUpdateStudents(students)
+          return handleUpdateStudents(students)
         }
         if (files && createStudentOption === CreationOption.Import) {
-          handleImportStudents()
+          return handleImportStudents()
         }
+        setSuccessMessage('Course updated successfully')
+        refetch()
+        onClose()
       },
     })
   }
