@@ -22,9 +22,9 @@ function RootComponent() {
   const { location, navigate } = useRoute()
   const user = useAuthStore(state => state.user)
 
-  if (!user) {
-    navigate({ to: '/login', replace: true })
-  }
+  // if (!user) {
+  //   navigate({ to: '/login', replace: true })
+  // }
 
   if (fullScreenPath.includes(location.pathname)) {
     return (

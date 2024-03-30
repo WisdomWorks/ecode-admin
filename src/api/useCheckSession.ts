@@ -13,6 +13,7 @@ export const useCheckSession = () => {
         })
       },
       retry: false,
+      enabled: false,
     },
   )
 }
