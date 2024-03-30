@@ -1,3 +1,5 @@
+import { beforeLoadProtected } from '@/utils'
+
 import { createFileRoute } from '@tanstack/react-router'
 
 export const DashBoard = () => {
@@ -10,4 +12,5 @@ export const DashBoard = () => {
 
 export const Route = createFileRoute('/')({
   component: DashBoard,
+  beforeLoad: beforeLoadProtected,
 })

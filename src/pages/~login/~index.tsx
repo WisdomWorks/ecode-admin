@@ -10,12 +10,11 @@ import { Schema } from '@/types'
 import { LoginRequestSchema } from './login.schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@mui/material'
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 
 type TLogin = Schema['LoginRequest']
 
 export const Login = () => {
-  const navigate = useNavigate()
   const setUser = useAuthStore(state => state.setUser)
   const { setErrorMessage, setSuccessMessage } = useToastMessage()
   const { mutate } = useLogin()
@@ -53,7 +52,7 @@ export const Login = () => {
           createdDate,
           updatedDate,
         })
-        navigate({ to: '/' })
+        window.location.replace('/')
       },
       onError: error =>
         setErrorMessage(error.response?.data.message || 'Login failed!'),

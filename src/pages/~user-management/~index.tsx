@@ -1,7 +1,7 @@
 import { SyntheticEvent, useState } from 'react'
 
 import { TabPanel } from '@/components/common/TabPanel'
-import { a11yProps } from '@/utils'
+import { a11yProps, beforeLoadProtected } from '@/utils'
 
 import { UserCreationTab } from './create-user/UserCreationTab'
 import { UserTab } from './users-tab/UserTab'
@@ -42,4 +42,5 @@ export default UserManagement
 
 export const Route = createFileRoute('/user-management/')({
   component: UserManagement,
+  beforeLoad: beforeLoadProtected,
 })

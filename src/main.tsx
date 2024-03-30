@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import ReactDOM from 'react-dom/client'
 
 import { configAuthorization } from './api/axios.ts'
@@ -66,7 +66,7 @@ export const InnerApp = () => {
     <SnackbarProvider autoHideDuration={2000} maxSnack={1}>
       <RouterProvider
         context={{
-          user: undefined,
+          user: data?.data,
         }}
         router={router}
       />
@@ -74,10 +74,17 @@ export const InnerApp = () => {
   )
 }
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
+function App() {
+  return (
     <QueryClientProvider client={queryClient}>
       <InnerApp />
     </QueryClientProvider>
-  </React.StrictMode>,
-)
+  )
+}
+
+const rootElement = document.getElementById('root')!
+
+if (!rootElement.innerHTML) {
+  const root = ReactDOM.createRoot(rootElement)
+  root.render(<App />)
+}

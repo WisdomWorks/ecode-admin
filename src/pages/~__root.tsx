@@ -1,7 +1,6 @@
 import { TUser } from '@/api'
 import { Container } from '@/components/layout'
 import { SideBar } from '@/components/layout/SideBar'
-import { useAuthStore } from '@/context/useAuthStore'
 import { useRoute } from '@/hooks'
 
 import { QueryClient } from '@tanstack/react-query'
@@ -19,12 +18,7 @@ export const Route = createRootRouteWithContext<RouteContext>()({
 const fullScreenPath = ['/login', '/forget-password']
 
 function RootComponent() {
-  const { location, navigate } = useRoute()
-  const user = useAuthStore(state => state.user)
-
-  if (!user) {
-    navigate({ to: '/login', replace: true })
-  }
+  const { location } = useRoute()
 
   if (fullScreenPath.includes(location.pathname)) {
     return (

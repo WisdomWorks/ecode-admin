@@ -1,7 +1,7 @@
 import { SyntheticEvent, useState } from 'react'
 
 import { TabPanel } from '@/components/common/TabPanel'
-import { a11yProps } from '@/utils'
+import { a11yProps, beforeLoadProtected } from '@/utils'
 
 import { CourseTab } from './course-tab/CourseTab'
 import { CourseCreationTab } from './create-course-tab/CourseCreationTab'
@@ -43,4 +43,5 @@ export default UserManagement
 
 export const Route = createFileRoute('/course-management/')({
   component: UserManagement,
+  beforeLoad: beforeLoadProtected,
 })
