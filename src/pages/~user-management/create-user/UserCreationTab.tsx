@@ -35,8 +35,8 @@ export const UserCreationTab = () => {
         reset()
         setSuccessMessage('User created successfully')
       },
-      onError: () => {
-        setErrorMessage('Failed to create user')
+      onError: error => {
+        setErrorMessage(error.response?.data.message || 'Failed to create user')
       },
     })
   }
