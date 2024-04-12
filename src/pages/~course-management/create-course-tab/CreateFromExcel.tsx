@@ -52,14 +52,18 @@ export const CreateFromExcel = () => {
           multiple user accounts
         </p>
         <div>
-          {/* <a href={require('@/assets/templates/')}> */}
-          <Button
-            className="submitBtn"
-            startIcon={<Download fontSize="large" />}
+          <a
+            href="https://storage.googleapis.com/codee-data/templates/Create_Course_Template.xlsx"
+            rel="noreferrer"
+            target="_self"
           >
-            Download template
-          </Button>
-          {/* </a> */}
+            <Button
+              className="submitBtn"
+              startIcon={<Download fontSize="large" />}
+            >
+              Download template
+            </Button>
+          </a>
         </div>
       </div>
     </div>

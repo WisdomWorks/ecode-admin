@@ -156,12 +156,18 @@ export const CreateManuallyForm = ({
               importing multiple user accounts
             </p>
             <div>
-              <Button
-                className="submitBtn"
-                startIcon={<Download fontSize="large" />}
+              <a
+                href="https://storage.googleapis.com/codee-data/templates/Add_Student_To_Course_Template.xlsx"
+                rel="noreferrer"
+                target="_self"
               >
-                Download template
-              </Button>
+                <Button
+                  className="submitBtn"
+                  startIcon={<Download fontSize="large" />}
+                >
+                  Download template
+                </Button>
+              </a>
             </div>
           </div>
         </div>
