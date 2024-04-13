@@ -40,4 +40,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: wisdomwork/ecode-admin:latest
+          tags: wisdomwork/ecode-admin:0.1
