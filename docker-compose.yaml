@@ -1,7 +1,13 @@
 services:
   app:
     image: wisdomwork/ecode-admin:latest
-    platform: linux/x86_64
+    platform: linux/amd64
     ports:
-      - '4001:80'
-    restart: unless-stopped
+      - '4001:4001'
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - VITE_API_URL=http://locahost:8080
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
