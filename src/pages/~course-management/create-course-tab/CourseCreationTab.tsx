@@ -54,21 +54,29 @@ export const CourseCreationTab = () => {
         setErrorMessage(error.response?.data.message || 'An error occurred')
       },
       onSuccess: data => {
-        setSuccessMessage('Course created successfully')
         if (
           students.length &&
           createStudentOption === CreationOption.Manually
         ) {
-          addStudents({
-            courseId: data.data.courseId,
-            studentIds: students.map(student => student.userId),
-          })
+          addStudents(
+            {
+              courseId: data.data.courseId,
+              studentIds: students.map(student => student.userId),
+            },
+            {
+              onSuccess: () => setSuccessMessage('Course created successfully'),
+            },
+          )
         }
         if (files && createStudentOption === CreationOption.Import) {
           const formData = new FormData()
           formData.append('file', files[0])
           formData.append('courseId', data.data.courseId)
-          importStudentsToCourse(formData)
+          importStudentsToCourse(formData, {
+            onSuccess: () => setSuccessMessage('Course created successfully'),
+            onError: error =>
+              setErrorMessage(error.response?.data || 'An error occurred'),
+          })
         }
         reset()
       },

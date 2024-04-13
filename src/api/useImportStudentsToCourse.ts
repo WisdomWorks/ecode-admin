@@ -4,7 +4,7 @@ import { AxiosError, AxiosResponse } from 'axios'
 
 export const useImportStudentsToCourse = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return useMutation<AxiosResponse, AxiosError<{ message: string }>, any>({
+  return useMutation<AxiosResponse, AxiosError<string>, any>({
     mutationFn: async (formData: FormData) => {
       return await callAPI('/courses/import-students', 'post', {
         data: formData,

@@ -89,7 +89,7 @@ export const EditCourseModal = ({
     formData.append('courseId', String(courseId))
     importStudentsToCourse(formData, {
       onError: error => {
-        setErrorMessage(error.response?.data.message || 'An error occurred')
+        setErrorMessage(error.response?.data || 'An error occurred')
         onClose()
       },
       onSuccess: () => {

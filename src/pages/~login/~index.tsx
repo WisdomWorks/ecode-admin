@@ -52,7 +52,7 @@ export const Login = () => {
           createdDate,
           updatedDate,
         })
-        window.location.replace('/')
+        window.location.replace('/user-management/')
       },
       onError: error =>
         setErrorMessage(error.response?.data.message || 'Login failed!'),
