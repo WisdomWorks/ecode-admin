@@ -1,4 +1,4 @@
-import Logo from '@/assets/logo.png'
+import Logo from '@/assets/logo2.png'
 
 import { SidebarMenu } from './SidebarMenu'
 import { SidebarProfile } from './SidebarProfile'
@@ -13,10 +13,13 @@ export const SideBar = () => {
       variant="permanent"
     >
       <div className="flex h-full flex-col justify-between text-white ">
-        <div>
-          <Link>
-            <img alt="logo" src={Logo} />
-          </Link>
+        <div className="flex flex-col gap-8">
+          <div className="flex flex-col items-center justify-center gap-2">
+            <Link>
+              <img alt="logo" className="h-[10rem]" src={Logo} />
+            </Link>
+            <p className="text-xl font-bold italic">Code-E Admin</p>
+          </div>
 
           <SidebarMenu />
         </div>
