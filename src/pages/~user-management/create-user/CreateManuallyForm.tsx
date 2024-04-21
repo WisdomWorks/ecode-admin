@@ -38,15 +38,17 @@ export const CreateManuallyForm = ({
           placeholder="Your email"
           required
         />
+        <div className="col-span-4"></div>
+        <FormInput
+          className="col-span-8"
+          control={control}
+          disabled={isUpdate}
+          label="Username"
+          name="username"
+          placeholder="Your username"
+          required
+        />
       </div>
-      <FormInput
-        className="col-span-4"
-        control={control}
-        label="User name"
-        name="username"
-        placeholder="Your username"
-        required
-      />
 
       <div className="col-span-12 grid grid-cols-12 gap-4">
         <FormSelector
