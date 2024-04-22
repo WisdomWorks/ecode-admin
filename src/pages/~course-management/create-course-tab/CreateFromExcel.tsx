@@ -17,10 +17,13 @@ export const CreateFromExcel = () => {
       formData.append('file', files[0])
       mutate(formData, {
         onError: error => {
-          setErrorMessage(error.message || 'An error occurred')
+          const message = `Failed to save because the file contains invalid data. Please check the rows: ${error.response?.data.failedRows?.join(
+            ', ',
+          )}`
+          setErrorMessage(message || 'An error occurred. Try again')
         },
         onSuccess: () => {
-          setSuccessMessage('Users imported successfully')
+          setSuccessMessage('Courses imported successfully')
           setFiles(null)
         },
       })
@@ -46,11 +49,24 @@ export const CreateFromExcel = () => {
         <span className="text-2xl font-bold text-neutral-900">
           Import Excel file guides
         </span>
-        <p className="text-lg font-normal text-neutral-800">
-          Download the Excel template to simplify the import process. This file
-          provides the necessary format for efficiently creating and importing
-          multiple user accounts
-        </p>
+        <div>
+          <h3>Please fill in the excel file in the format:</h3>
+          <ul>
+            <li>
+              <p>1. Column A is the Course name</p>
+            </li>
+            <li>
+              <p>2. Column B is the semester with exactly 4 characters</p>
+            </li>
+            <li>
+              <p>3. Column C is course description</p>
+            </li>
+          </ul>
+          <h5>
+            The system will not import if the file is not in the correct format
+          </h5>
+          <h5>Click the button below to get the template</h5>
+        </div>
         <div>
           <a
             href="https://storage.googleapis.com/codee-data/templates/Create_Course_Template.xlsx"

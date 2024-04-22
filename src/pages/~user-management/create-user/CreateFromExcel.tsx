@@ -46,11 +46,36 @@ export const CreateFromExcel = () => {
         <span className="text-2xl font-bold text-neutral-900">
           Import Excel file guides
         </span>
-        <p className="text-lg font-normal text-neutral-800">
-          Download the Excel template to simplify the import process. This file
-          provides the necessary format for efficiently creating and importing
-          multiple user accounts
-        </p>
+        <div>
+          <h3>Please fill in the excel file in the format:</h3>
+          <ul>
+            <li>
+              <p>1. Column A is the Student name</p>
+            </li>
+            <li>
+              <p>
+                2. Column B is the email, the system will not import if the
+                email already exists
+              </p>
+            </li>
+            <li>
+              <p>
+                2. Column C is the username, the system will not import if the
+                username already exists
+              </p>
+            </li>
+            <li>
+              <p>
+                3. Column C is role of user. The user chooses 1 of 3 values
+                [admin, teacher, student]
+              </p>
+            </li>
+          </ul>
+          <h5>
+            The system will not import if the file is not in the correct format
+          </h5>
+          <h5>Click the button below to get the template</h5>
+        </div>
         <div>
           <a
             href="https://storage.googleapis.com/codee-data/templates/Create_User_Template.xlsx"

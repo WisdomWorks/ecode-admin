@@ -67,6 +67,7 @@ export const CourseCreationTab = () => {
               onSuccess: () => setSuccessMessage('Course created successfully'),
             },
           )
+          return reset()
         }
         if (files && createStudentOption === CreationOption.Import) {
           const formData = new FormData()
@@ -77,7 +78,9 @@ export const CourseCreationTab = () => {
             onError: error =>
               setErrorMessage(error.response?.data || 'An error occurred'),
           })
+          return reset()
         }
+        setSuccessMessage('Course created successfully')
         reset()
       },
     })
