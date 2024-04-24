@@ -17,7 +17,10 @@ export const CreateFromExcel = () => {
       formData.append('file', files[0])
       mutate(formData, {
         onError: error => {
-          setErrorMessage(error.message || 'An error occurred')
+          const message = `Failed to save because the file contains invalid data. Please check the rows: ${error.response?.data.failedRows?.join(
+            ', ',
+          )}`
+          setErrorMessage(message || 'An error occurred')
         },
         onSuccess: () => {
           setSuccessMessage('Users imported successfully')
